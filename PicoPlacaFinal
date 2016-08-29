@@ -1,0 +1,231 @@
+require "date"
+#Dias de la semana
+days = {0 => "Domingo",  1 => "Lunes", 2 => "Martes", 3 => "Miercoles",	
+        4 => "Jueves",5 => "Viernes", 6 => "Sabado"}
+
+class Tipo_Placa
+@numero_caracteres
+@numero_letras
+@numero_numeros
+  def numero_caracteres=(caracteres)
+    @numero_caracteres = caracteres
+  end
+  def numero_letras=(letras)
+    @numero_letras = letras
+  end
+  def numero_numeros=(numero)
+    @numero_numeros = numero
+  end
+
+  def numero_caracteres
+  @numero_caracteres
+  end
+  def numero_letras
+  @numero_letras 
+  end
+  def numero_numeros
+  @numero_numeros 
+  end
+
+end
+
+#Funcion para la validacion de la fecha
+def validate_date(date)
+    formats = ['%d-%m-%y', '%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%d %H:%M:%S %z']
+    formats.each do |format|
+      begin
+        return true if Date.strptime(date, format)
+      rescue
+      end
+    end
+    puts "La fecha ingresada no es correcta"
+    return false
+end
+
+#Funcion para la validacion de la placa
+def validate_placa(placa,numero_caracteres,numero_letras,numero_numeros)
+	if placa.length==numero_caracteres
+		for i in (0..2)
+			if  placa[i] =~/[A-Z]/ || placa[i] =~/[a-z]/
+			else
+				puts 'La placa ingresada no es correcta'
+				return false
+			end
+		end
+		for i in (3..6)
+			if  placa[i]=~/[0-9]/
+			else
+				puts 'La placa ingresada no es correcta'
+				return false
+			end
+		end
+		if placa[0]=='D'
+			puts 'No existe provincia con esa placa'
+			return false
+		end
+		if placa[0]=='F'
+			puts 'No existe provincia con esa placa'
+			return false
+		end
+		return true
+	else
+	puts 'La placa ingresada no es correcta'
+	return false
+	end	
+end
+
+#Funcion para la validacion de la hora
+def validate_hora(hora)
+	if hora.length==5
+		for i in (0..1)
+			if  hora[i]=~/[0-9]/
+			else
+				puts 'La hora ingresada no es correcta'
+				return false
+			end
+		end
+		if hora[0,2]>'24'
+			puts 'La hora ingresada no es correcta'
+			return false
+		end
+		if hora[2]==':'
+			else
+			puts 'La hora ingresada no es correcta'
+			return false
+		end
+		if hora[3,2]>'59'
+			puts 'La hora ingresada no es correcta'
+			return false
+		end
+	return true 
+	end
+	puts "Hora ingresada incorrecta"
+	return false
+end
+
+#Funcion para el calculo del pico y placa
+def pico_y_placa(dia,lastdigit,hour,minutes)
+	if dia>0 && dia<6
+		if dia==1
+			if lastdigit=='1' || lastdigit =='2'
+				if hour =='07' || hour =='08'
+					return false
+				end
+				if hour =='09' && minutes <='30'
+					return false
+				end
+				if hour =='16' || hour =='17' ||hour =='18'
+					return false
+				end
+				if hour =='19' && minutes <='30'
+					return false
+				end
+			end 	
+		end
+		if dia==2
+			if lastdigit=='3' || lastdigit =='4'
+				if hour =='7' || hour =='8'
+					return false
+				end
+				if hour =='9' && minutes <='30'
+					return false
+				end
+				if hour =='16' || hour =='17' ||hour =='18'
+					return false
+				end
+				if hour =='19' && minutes <='30'
+					return false
+				end
+			end 	
+		end
+		if dia==3
+			if lastdigit=='5' || lastdigit =='6'
+				if hour =='7' || hour =='8'
+					return false
+				end
+				if hour =='9' && minutes <='30'
+					return false
+				end
+				if hour =='16' || hour =='17' ||hour =='18'
+					return false
+				end
+				if hour =='19' && minutes <='30'
+					return false
+				end
+			end 	
+		end
+		if dia==4
+			if lastdigit=='7' || lastdigit =='8'
+				if hour =='7' || hour =='8'
+					return false
+				end
+				if hour =='9' && minutes <='30'
+					return false
+				end
+				if hour =='16' || hour =='17' ||hour =='18'
+					return false
+				end
+				if hour =='19' && minutes <='30'
+					return false
+				end
+			end 	
+		end
+		if dia==5
+			if lastdigit=='9' || lastdigit =='0'
+				if hour =='7' || hour =='8'
+					return false
+				end
+				if hour =='9' && minutes <='30'
+					return false
+				end
+				if hour =='16' || hour =='17' ||hour =='18'
+					return false
+				end
+				if hour =='19' && minutes <='30'
+					return false
+				end
+			end 	
+		end
+		return true 
+	else
+	puts 'algo pasa true'
+	return true 
+	end
+end
+
+begin
+puts 'CALCULADOR DE PICO Y PLACA, SOSA CARLOS'
+puts 'Ingresa la fecha, ejemplo 25-05-2010, luego dar enter: '
+placa_ecuatoriana=Tipo_Placa.new()
+placa_ecuatoriana.numero_caracteres = 7
+placa_ecuatoriana.numero_letras = 3
+placa_ecuatoriana.numero_numeros = 4
+
+fecha=gets.chomp
+	until validate_date(fecha) do
+		puts 'Ingresa la fecha, ejemplo 25-05-2010, luego dar enter: '
+		fecha=gets.chomp
+	end
+date = Date.parse(fecha)
+puts "Ese dia fue #{days[date.wday]}"
+puts 'Ingresa la placa, ejemplo ABC1234, luego dar enter:'
+placa=gets.chomp
+	until validate_placa(placa,placa_ecuatoriana.numero_caracteres,3,4) do
+		puts 'Ingresa la placa, ejemplo ABC1234, luego dar enter:'
+		placa=gets.chomp
+	end
+print 'Ingresa la hora, ejemplo 14:50, luego dar enter:'
+hora=gets.chomp
+	until validate_hora(hora) do
+		print 'Ingresa la hora, ejemplo 14:50, luego dar enter :'
+		hora=gets.chomp
+	end
+if pico_y_placa(date.wday, placa[6],hora[0,2],hora[3,2])
+	puts 'El auto puede circular'
+else
+	puts 'El auto no puede circular '
+end
+rescue => err
+	puts err.message
+end
+gets()
